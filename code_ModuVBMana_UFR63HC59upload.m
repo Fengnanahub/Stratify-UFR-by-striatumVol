@@ -81,8 +81,6 @@ rowINDEX  = {[1:63]};% 1*4 cell;
 [r, c] = size(rowINDEX);
 
 col = [27, 51];% col index of SIPS;
-% col = [55]; % LESN
-% col= [77:85]; % congitive
 striROIco = [2:7];% column index of striatum subarea vol;
 clear RPGHR;
 % for each group;
@@ -102,7 +100,6 @@ for groupi = 1: c
         end
     end
 end
-fdr = mafdr(RPGHR([1: 6], 2), 'BHFDR', true);
 %% %% sctter the striatum subarea with SIPS-GHR63; (residual regressed age,sex,edu,TIV);
 % volume-SIPS;
 indexGHR = [1:63];
@@ -231,7 +228,7 @@ HCminindex158 = find(HC59subareaStriatumVOL1{:, col}<=cutof);
 save HCminHCmedian_index158.mat HCminindex158; 
 
 %% mean(SD) of subarea subgroup
-colu = [5, 9, 11:14];
+colu = [5, 9];
 row1 = GHRmaxindex78;
 row2 = GHRminindex78;
 rowHC = [1:59];
@@ -332,7 +329,7 @@ for i = 1:length(GHRcolu)
     meansdT1(i, 6) = p; % ttest P value
 end
 
-%%(subgroup1-HCs: comparing striatum volume)
+%%(subgroup2-HCs: comparing striatum volume)
 clear Covar GHRrow datavol1 datavol2 meansdT2;
 GHRrow = GHRminindex158;
 HCrow = [1: 59];
@@ -392,36 +389,11 @@ for groupi = 1: c
         end
     end
 end
-
 %% other separation: correlation of subgroup striatum(subarea) vol and SIPS,,,LES;
-rowINDEX  = {GHRmaxindex158, GHRminindex158([1:6, 8:37])};
-[r, c] = size(rowINDEX);
- col = [55];%LES
-striROIco = [2:7];% column index of striatum subarea vol;
-N = length(striROIco);
 
-clear RPGHR;
-% for each group;
-for groupi = 1: c 
-    clear Cov;
-    % Age,sex,edu, TIV;
-    Cov = GHRdataMatchImageFDTIV1{rowINDEX{1, groupi}, [5, 4, 9, 11]};
-    
-    for  i =1: length(striROIco) % for each subarea of striatum
-        for j = 1:length(col)
-            colu = j*2;
-            [R, P] = partialcorr(GHR63subareaStriatumVOL1{rowINDEX{1, groupi}, striROIco(i)},...
-                GHRdataMatchImageFDTIV1{rowINDEX{1, groupi}, col(j)},...
-                Cov, 'Type', 'Spearman', 'Rows', 'Complete');
-            RPGHR(N*(groupi-1)+i, colu-1) = R; 
-            RPGHR(N*(groupi-1)+i, colu) = P; 
-        end
-    end
-end
 %% scatter sign two subgroups (residual regressed age,sex,edu,TIV);
 % volume-SIPS;
 indexGHRmin = GHRminindex78([1:5, 7:37]);
-
 col = [2, 3, 4, 6];%Xdata
 variab = {'Lcau', 'Rcauda', 'Lputa','LNacc'};
 row = [55];% Ydata
@@ -694,9 +666,8 @@ COV = GHRdataMatchImageFDTIV1{Rowin, [5, 4, 9, 11]};% age, sex, edu, TIV;
 [paths, stats] = mediation(X, Y, M, 'boottop', 'bootsamples', 3000,...
     'covs', COV, 'plots', 'verbose',...
      'names', {'LESN' 'SIPStotal' 'LcaudateVol'});
- 
- 
- 
+
+     
  %% add analysis of enrichment for GHRmin and GHRmax subgroup;
  %% % read the image data Cell{sub37*1}--GHRmin-voxel mediation
  WKD = ['~/3ndComputVBMcat12modulated'];
